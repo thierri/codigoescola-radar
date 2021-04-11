@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch 'index.js' --exec 'node index.js'"
+    "dev": "nodemon --watch 'src/' --exec 'node src/index.js'"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "dotenv": "^8.2.0",
     "google-auth-library": "^7.0.4",
     "googleapis": "^71.0.0",
+    "node-cache": "^5.1.2",
     "nodemon": "^2.0.7"
   }
 }

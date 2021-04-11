@@ -26,7 +26,9 @@ const obterComentarios = (partindoDe = Date.now()) => {
         "maxResults": 100
     }).then(
         function (response) {
-            console.log("Response", JSON.stringify(response.data.items));
+            console.log("Response", response.data.items);
+            console.log("Response", response.data.items.length);
+            return response.data.items;
         },
         function (err) { console.error("Execute error", err); }
     );
