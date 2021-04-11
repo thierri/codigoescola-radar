@@ -18,11 +18,12 @@ const obterComentarios = (partindoDe = Date.now()) => {
     });
 
 
-    youtubeService.commentThreads.list({
+    return youtubeService.commentThreads.list({
         "part": [
             "snippet,replies"
         ],
-        "allThreadsRelatedToChannelId": process.env.channelId
+        "allThreadsRelatedToChannelId": process.env.channelId,
+        "maxResults": 100
     }).then(
         function (response) {
             console.log("Response", JSON.stringify(response.data.items));

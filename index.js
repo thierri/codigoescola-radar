@@ -1,6 +1,6 @@
-import obterComentarios from "./adapters/youtube/obterComentarios.js";
+import obterComentarios from "./adaptadores/youtube/obterComentarios.js";
 import dovenv from "dotenv";
 
 dovenv.config();
 
-obterComentarios();
+obterComentarios(); 
