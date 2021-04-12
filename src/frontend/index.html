@@ -10,12 +10,37 @@
     <title>CódigoEscola Trending Topics</title>
 </head>
 
-<body class="container mx-auto">
+<body class="container w-1/2 mx-auto text-gray-800">
 
     <div x-data="inicializarDados()"  x-init="carregarComentarios()" class="mt-16 xxl:mt-0 xxl:ml-auto">
-        <h4 class="font-bold text-lg">CódigoEscola Trending Tópics</h4>
+        <h4 class="font-bold py-20 text-2xl">CódigoEscola Trending Tópics</h4>
+        
+        <div class="flex text-xl space-x-6 font-bold tracking-tighter text-gray-900">
+            <div class="text-indigo-700 border-b-2 border-indigo-400">
+                Tudo
+            </div>
+            <div>
+                #sugestaoVideo
+            </div>
+            <div>
+                #mandouBem
+            </div>
+        </div>
+        
+        <p class="my-5 mb-20 text-sm">
+            Veja os comentários mais recentes do canal Código Escola.
+        </p>
+
         <template x-for="comentario in comentarios" :key="comentario.id">
-            <div x-text="comentario.texto"></div>
+            <div class="p-10 my-7">
+                <div class="font-bold tracking-tight" x-text="comentario.texto"></div>
+                <p>-- Thi***** *****</p>
+                <div class="flex space-x-3 mt-5 text-sm">
+                    <div class="text-indigo-500 uppercase font-bold px-3 py-1  rounded-sm"><span x-text="comentario.likes"></span> likes</div>
+                    <div class="bg-indigo-500 px-3 py-1 text-blue-100 rounded-sm"> Criado em <span x-text="comentario.criadoEm"></span></div>
+                    <div class="bg-indigo-500 px-3 py-1 text-blue-100 rounded-sm">Acessar Vídeo</div>
+                </div>
+            </div>
         </template>
     </div>
     <script>
