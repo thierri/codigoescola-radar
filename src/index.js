@@ -27,7 +27,7 @@ const limparComentarios = (comentariosSujos) => {
     let tratarObjeto = item => {
         return {
             id: item.id,
-            comentario: item.snippet.topLevelComment.snippet.textDisplay,
+            texto: item.snippet.topLevelComment.snippet.textDisplay,
             autor: item.snippet.topLevelComment.snippet.authorDisplayName,
             criadoEm: item.snippet.topLevelComment.snippet.publishedAt,
             likes: item.snippet.topLevelComment.snippet.likeCount,

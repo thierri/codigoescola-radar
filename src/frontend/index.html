@@ -13,7 +13,10 @@
 <body class="container mx-auto">
 
     <div x-data="inicializarDados()"  x-init="carregarComentarios()" class="mt-16 xxl:mt-0 xxl:ml-auto">
-        <h4 class="font-bold text-lg">Axios example with Alpine js</h4>
+        <h4 class="font-bold text-lg">CódigoEscola Trending Tópics</h4>
+        <template x-for="comentario in comentarios" :key="comentario.id">
+            <div x-text="comentario.texto"></div>
+        </template>
     </div>
     <script>
         function inicializarDados() {
@@ -23,7 +26,7 @@
                 carregarComentarios(val, servizio) {
                     axios.get('/comentarios')
                         .then((r) => {
-                            console.log(r);
+                            this.comentarios = r.data;
                         }).catch((e) => {
                             console.log(e);
                         })
