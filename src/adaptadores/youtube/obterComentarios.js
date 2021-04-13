@@ -1,8 +1,9 @@
 
 import  googleApis  from "googleapis";
 
-const obterComentarios = (partindoDe = Date.now()) => {
-    console.log(`Buscando comentários do Google`);
+const obterComentarios = () => {
+    console.log(`Buscando comentários no Google`);
+    
     if (!process.env.googleAuthToken) {
         throw Error('Variável de ambiente googleAuthToken indisponível');
     }
@@ -17,19 +18,18 @@ const obterComentarios = (partindoDe = Date.now()) => {
         auth: process.env.googleAuthToken
     });
 
-
-    return youtubeService.commentThreads.list({
+    const commentThreadsListOptions = {
         "part": [
             "snippet,replies"
         ],
         "allThreadsRelatedToChannelId": process.env.channelId,
         "maxResults": 100
-    }).then(
-        function (response) {
-            console.log("Número de comentários retornados: ", response.data.items.length);
-            return response.data.items;
-        },
-        function (err) { console.error("Execute error", err); }
-    );
+    };
+
+    return youtubeService.commentThreads
+        .list(commentThreadsListOptions)
+        .then(
+            (response) => response.data.items
+        );
 }
 export default obterComentarios;

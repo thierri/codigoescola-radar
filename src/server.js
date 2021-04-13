@@ -14,12 +14,12 @@ dovenv.config();
 const cache = new nodeCache();
 const app = express()
 app.use(morgan('tiny'));
-
+const { PORT = 3000, PWD } = process.env
 
 /**
  * Servindo frontend
  */
-const diretorioFrontend = path.join(process.env.PWD, 'src/frontend')
+const diretorioFrontend = path.join(PWD, 'src/frontend')
 app.use(express.static(diretorioFrontend))
 
 
@@ -42,14 +42,15 @@ app.get('/comentarios', async (req, res) => {
     const comentariosNoCache = cache.get("comentariosNoCache");
     if (comentariosNoCache) {
         console.log(`Usando cache`);
-        res.json(comentariosNoCache)
+        res.json(comentariosNoCache);
     } else {
-        const comentarios = limparComentarios(await obterComentarios());
-        cache.set("comentariosNoCache", comentarios, 60 * 5);
-        res.json(comentarios);
+        const comentarioSujos = await obterComentarios()
+        const comentariosLimpos = limparComentarios(comentarioSujos);
+        cache.set("comentariosNoCache", comentariosLimpos, 60 * 5);
+        res.json(comentariosLimpos);
     }
 })
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`Aplicativo rodando 😅`)
 })
