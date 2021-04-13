@@ -40,13 +40,13 @@ const limparComentarios = (comentariosSujos) => {
 
 app.get('/comentarios', async (req, res) => {
     const comentariosNoCache = cache.get("comentariosNoCache");
-    if (comentariosNoCache == undefined) {
+    if (comentariosNoCache) {
+        console.log(`Usando cache`);
+        res.json(comentariosNoCache)
+    } else {
         const comentarios = limparComentarios(await obterComentarios());
         cache.set("comentariosNoCache", comentarios, 60 * 5);
         res.json(comentarios);
-    } else {
-        console.log(`Usando cache`);
-        res.json(comentariosNoCache)
     }
 })
 
