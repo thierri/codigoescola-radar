@@ -7,38 +7,50 @@
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+        integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+        crossorigin="anonymous"></script>
     <title>CódigoEscola Trending Topics</title>
 </head>
 
-<body class="container w-1/3 mx-auto text-gray-800">
+<body class="container w-full md:w-2/3 xl:w-1/2 2xl:w-1/3  px-5 mx-auto text-gray-800">
 
-    <div x-data="inicializarDados()"  x-init="carregarComentarios()" class="mt-16 xxl:mt-0 xxl:ml-auto">
+    <div x-data="inicializarDados()" x-init="carregarComentarios()" class="mt-16 xxl:mt-0 xxl:ml-auto">
         <h4 class="font-bold py-20 text-6xl">Trending Topics</h4>
-        
+
         <div class="flex text-xl space-x-6 font-bold tracking-tighter text-gray-600">
-            <div class="text-indigo-700 border-b-2 border-indigo-400">
+            <div :class="{ 'text-indigo-700 border-b-2 border-indigo-400': tab === 'tudo' }"
+                @click="carregarTab('tudo')" class="hover:text-indigo-700 cursor-pointer">
                 Tudo
             </div>
-            <div>
+            <div :class="{ 'text-indigo-700 border-b-2 border-indigo-400': tab === 'sugestaoVideo' }"
+                @click="carregarTab('sugestaoVideo')" class="hover:text-indigo-700 cursor-pointer">
                 #sugestaoVideo
             </div>
-            <div>
+            <div :class="{ 'text-indigo-700 border-b-2 border-indigo-400': tab === 'mandouBem' }"
+                @click="carregarTab('mandouBem')" class="hover:text-indigo-700 cursor-pointer">
                 #mandouBem
             </div>
         </div>
-        
-        <p class="my-5 mb-20 text-sm">
-            Veja os comentários mais recentes do canal Código Escola.
-        </p>
 
-        <template x-for="comentario in comentarios" :key="comentario.id">
+        <div class="my-5 mb-20 text-sm">
+            Veja os comentários mais recentes do canal CódigoEscola do Youtube. <a target="_blank" href="https://www.youtube.com/channel/UCrjW-UxCa_GeOowmr0zhldQ">Acesse o canal.</a>
+        </div>
+
+        <template x-for="comentario in comentariosEmExibição" :key="comentario.id">
             <div class="py-10 my-7 text-gray-700">
-                <div class="bg-gradient-to-br from-indigo-700 to-indigo-800 text-indigo-100 p-4 rounded-lg rounded-bl-none text-sm font-semibold " x-text="comentario.texto"></div>
-                <div class="flex space-x-5 mt-3 text-sm font-semibold text-gray-600">
-                    <div x-text="comentario.autor.substring(0,3)"></div>
+                <div
+                    class="bg-gradient-to-br from-indigo-700 to-indigo-800 text-indigo-100 p-4 rounded-lg rounded-bl-none ">
+                    <div x-text="'#'+comentario.hashtag" class="font-medium text-indigo-400 mb-2"></div>
+                    <div x-text="comentario.texto"></div>
+                </div>
+                <div class="flex space-x-10 mt-3 text-sm font-semibold text-gray-600">
+                    <div x-text="comentario.autor"></div>
                     <div><span x-text="comentario.likes"></span> likes</div>
-                    <div> Criado em <span x-text="comentario.criadoEm"></span></div>
-                    <div> Acessar Vídeo</div>
+                    <div>Criado em <span x-text="comentario.criadoEm"></span></div>
+                    <div>
+                        <a target="_blank" :href=" 'https://www.youtube.com/watch?v=' + comentario.videoId">Acessar Vídeo</a>
+                    </div>
                 </div>
             </div>
         </template>
@@ -46,13 +58,26 @@
     <script>
         function inicializarDados() {
             return {
-                comentarios: [],
-
+                todosComentarios: [],
+                comentariosEmExibição: [],
+                tab: 'tudo',
+                carregarTab(tab) {
+                    this.tab = tab;
+                    if (tab == 'tudo') {
+                        this.comentariosEmExibição = this.todosComentarios;
+                        return;
+                    }
+                    this.comentariosEmExibição = _.filter(this.todosComentarios, function (o) { return o.hashtag == tab; });
+                },
                 carregarComentarios(val, servizio) {
                     axios.get('/comentarios')
                         .then((r) => {
-                            this.comentarios = r.data;
-                        }).catch((e) => {
+                            this.todosComentarios = r.data;
+                        })
+                        .then(() => {
+                            this.carregarTab('tudo');
+                        })
+                        .catch((e) => {
                             console.log(e);
                         })
                 }

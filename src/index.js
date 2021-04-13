@@ -27,11 +27,12 @@ const limparComentarios = (comentariosSujos) => {
     let tratarObjeto = item => {
         return {
             id: item.id,
-            texto: item.snippet.topLevelComment.snippet.textDisplay,
-            autor: item.snippet.topLevelComment.snippet.authorDisplayName,
+            texto: item.snippet.topLevelComment.snippet.textOriginal,
+            autor: item.snippet.topLevelComment.snippet.authorDisplayName.substring(0, 3) + "***",
             criadoEm: item.snippet.topLevelComment.snippet.publishedAt,
             likes: item.snippet.topLevelComment.snippet.likeCount,
             videoId: item.snippet.topLevelComment.snippet.videoId,
+            hashtag: Math.random() < 0.5 ? 'sugestaoVideo' : 'mandouBem',
         }
     };
     return _.map(comentariosSujos, tratarObjeto);;
