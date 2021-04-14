@@ -29,7 +29,8 @@ const obterComentarios = () => {
     return youtubeService.commentThreads
         .list(commentThreadsListOptions)
         .then(
-            (response) => response.data.items
+            response => response.data.items
         );
 }
+
 export default obterComentarios;
