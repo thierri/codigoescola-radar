@@ -15,6 +15,7 @@ const cache = new nodeCache();
 const app = express()
 app.use(morgan('tiny'));
 const { PORT = 3000, PWD } = process.env
+var regexHashtags = /#(sugestaovideo|mandoubem)/gmi
 
 /**
  * Servindo frontend
@@ -23,7 +24,7 @@ const diretorioFrontend = path.join(PWD, 'src/frontend')
 app.use(express.static(diretorioFrontend))
 
 
-const limparComentarios = (comentariosSujos) => {
+const processarComentarios = (comentarios) => {
     let tratarObjeto = item => {
         return {
             id: item.id,
@@ -32,10 +33,10 @@ const limparComentarios = (comentariosSujos) => {
             criadoEm: item.snippet.topLevelComment.snippet.publishedAt,
             likes: item.snippet.topLevelComment.snippet.likeCount,
             videoId: item.snippet.topLevelComment.snippet.videoId,
-            hashtag: Math.random() < 0.5 ? 'sugestaoVideo' : 'mandouBem',
+            hashtag: item.snippet.topLevelComment.snippet.textOriginal.match(regexHashtags),
         }
     };
-    return _.map(comentariosSujos, tratarObjeto);;
+    return _.map(comentarios, tratarObjeto);;
 }
 
 app.get('/comentarios', async (req, res) => {
@@ -44,10 +45,9 @@ app.get('/comentarios', async (req, res) => {
         console.log(`Usando cache`);
         res.json(comentariosNoCache);
     } else {
-        const comentarioSujos = await obterComentarios()
-        const comentariosLimpos = limparComentarios(comentarioSujos);
-        cache.set("comentariosNoCache", comentariosLimpos, 60 * 5);
-        res.json(comentariosLimpos);
+        let comentarios = processarComentarios(await obterComentarios());
+        cache.set("comentariosNoCache", comentarios, 60 * 5);
+        res.json(comentarios);
     }
 })
 
