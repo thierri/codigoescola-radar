@@ -5,7 +5,7 @@ import path from "path";
 import morgan from "morgan";
 import _ from "lodash";
 
-import obterComentarios from "./adaptadores/youtube/obterComentarios.js";
+import obterComentarios from "./obterComentarios.js";
 
 /**
  * Inicialização
@@ -33,7 +33,7 @@ const processarComentarios = (comentarios) => {
             criadoEm: item.snippet.topLevelComment.snippet.publishedAt,
             likes: item.snippet.topLevelComment.snippet.likeCount,
             videoId: item.snippet.topLevelComment.snippet.videoId,
-            hashtag: item.snippet.topLevelComment.snippet.textOriginal.match(regexHashtags),
+            hashtag: item.snippet.topLevelComment.snippet.textOriginal.match(regexHashtags) || [],
         }
     };
     return _.map(comentarios, tratarObjeto);;

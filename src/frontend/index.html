@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
-        integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
-        crossorigin="anonymous"></script>
     <title>CódigoEscola Trending Topics</title>
 </head>
 
@@ -34,14 +30,15 @@
         </div>
 
         <div class="my-5 mb-20 text-sm">
-            Veja os comentários mais recentes do canal CódigoEscola do Youtube. <a target="_blank" href="https://www.youtube.com/channel/UCrjW-UxCa_GeOowmr0zhldQ">Acesse o canal.</a>
+            Veja os comentários mais recentes do canal CódigoEscola do Youtube. <a target="_blank"
+                href="https://www.youtube.com/channel/UCrjW-UxCa_GeOowmr0zhldQ">Acesse o canal.</a>
         </div>
 
         <template x-for="comentario in comentariosEmExibição" :key="comentario.id">
             <div class="py-10 my-7 text-gray-700">
                 <div
                     class="bg-gradient-to-br from-indigo-700 to-indigo-800 text-indigo-100 p-4 rounded-lg rounded-bl-none ">
-                    <div x-text="'#'+comentario.hashtag" class="font-medium text-indigo-400 mb-2"></div>
+                    <div x-text="comentario.hashtag" class="font-medium text-indigo-400 mb-2"></div>
                     <div x-text="comentario.texto"></div>
                 </div>
                 <div class="flex space-x-10 mt-3 text-sm font-semibold text-gray-600">
@@ -49,7 +46,8 @@
                     <div><span x-text="comentario.likes"></span> likes</div>
                     <div>Criado em <span x-text="comentario.criadoEm"></span></div>
                     <div>
-                        <a target="_blank" :href=" 'https://www.youtube.com/watch?v=' + comentario.videoId">Acessar Vídeo</a>
+                        <a target="_blank" :href=" 'https://www.youtube.com/watch?v=' + comentario.videoId">Acessar
+                            Vídeo</a>
                     </div>
                 </div>
             </div>
@@ -67,19 +65,13 @@
                         this.comentariosEmExibição = this.todosComentarios;
                         return;
                     }
-                    this.comentariosEmExibição = _.filter(this.todosComentarios, function (o) { return o.hashtag == tab; });
+                    this.comentariosEmExibição = this.todosComentarios.filter(o => o.hashtag.includes('#' + tab));
                 },
-                carregarComentarios(val, servizio) {
-                    axios.get('/comentarios')
-                        .then((r) => {
-                            this.todosComentarios = r.data;
-                        })
-                        .then(() => {
-                            this.carregarTab('tudo');
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                        })
+                carregarComentarios() {
+                    fetch('/comentarios')
+                        .then(async r => this.todosComentarios = await r.json())
+                        .then(() => this.carregarTab('tudo'))
+                        .catch(e => console.log(e))
                 }
             }
         }
